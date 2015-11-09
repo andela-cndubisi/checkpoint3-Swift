@@ -10,27 +10,50 @@ import XCTest
 @testable import CurrencyCalculator
 
 class CurrencyCalculatorTests: XCTestCase {
+    var brain = Brain()
     
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    func testAddition() {
+        brain.addDigit(5)
+        XCTAssertFalse(brain.isTyping)
+        brain.performOperation(operation.add)
+        brain.addDigit(8)
+        XCTAssertEqual(13, brain.result)
     }
     
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
+    func testContinuousCalculation(){
+        brain.addDigit(8)
+        brain.performOperation(operation.add)
+        brain.addDigit(4)
+        brain.performOperation(operation.minus)
+        XCTAssertEqual(12, brain.result)
+        brain.addDigit(2)
+        brain.performOperation(operation.times)
+        XCTAssertEqual(10, brain.result)
     }
     
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    func testRecursiveCalculation(){
+        brain.pushOperand(5)
+        brain.performOperation("+")
+        brain.pushOperand(8)
+        brain.performOperation("×")
+        XCTAssertEqual(13, brain.result)
+        brain.pushOperand(2)
+        XCTAssertEqual(26, brain.evaluate())
     }
     
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measureBlock {
-            // Put the code you want to measure the time of here.
-        }
+    func testBadCalculation_ShouldReturn(){
+        brain.performOperation("+")
+        brain.pushOperand(5)
+        brain.performOperation("×")
+        brain.pushOperand(8)
+        XCTAssertEqual(nil, brain.evaluate())
     }
     
+    struct operation {
+        static let add = "+"
+        static let times = "×"
+        static let div = "÷"
+        static let minus = "−"
+    }
+
 }
