@@ -6,6 +6,10 @@
 //  Copyright © 2015 andela-cj. All rights reserved.
 //
 
+public protocol DisplayDelegete{
+    func update(result:Double?)
+}
+
 struct Brain {
     var opStack = [Op]()
     var isTyping:Bool = false

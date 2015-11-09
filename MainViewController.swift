@@ -8,15 +8,15 @@
 
 import UIKit
 
-class MainViewController: UIViewController, DisplayDelegete, UIPickerViewDataSource, UIPickerViewDelegate{
+class MainViewController: UIViewController, DisplayDelegete{
     
     
-    @IBOutlet weak var currencyPicker: UIPickerView!
+    @IBOutlet weak var pickerView: UIPickerView!
     @IBOutlet weak var resultDisplay: UILabel!
-    
+
     let list = Currencies()
     var calculator = Calculator()
-    
+    var currencyPicker:CurrencyPicker?
     @IBAction func digitPressed(sender: UIButton) {
         calculator.addDigigt(sender.currentTitle!)
     }
@@ -63,7 +63,6 @@ class MainViewController: UIViewController, DisplayDelegete, UIPickerViewDataSou
     
     override func viewDidLoad() {
         calculator.displayDelegate = self
-        currencyPicker.dataSource = self
-        currencyPicker.delegate = self
+        currencyPicker =  CurrencyPicker(pickerView)
     }
 }

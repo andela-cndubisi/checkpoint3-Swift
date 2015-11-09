@@ -78,23 +78,6 @@
                                     <action selector="digitPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="zEQ-4A-fN0"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DFY-7S-hg9">
-                                <rect key="frame" x="0.0" y="28" width="450" height="150"/>
-                                <animations/>
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="600" id="9MV-7V-qTQ"/>
-                                    <constraint firstAttribute="height" constant="150" id="ecV-Hc-yAI"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="40"/>
-                                <color key="textColor" red="0.95011677233618541" green="0.94590782663538731" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="9MV-7V-qTQ"/>
-                                    </mask>
-                                </variation>
-                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gFB-Ts-XeQ">
                                 <rect key="frame" x="0.0" y="431" width="150" height="85"/>
                                 <animations/>
@@ -234,6 +217,23 @@
                                 <animations/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             </pickerView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.20000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="DFY-7S-hg9">
+                                <rect key="frame" x="0.0" y="28" width="450" height="150"/>
+                                <animations/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="600" id="9MV-7V-qTQ"/>
+                                    <constraint firstAttribute="height" constant="150" id="ecV-Hc-yAI"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="55"/>
+                                <color key="textColor" red="0.95011677233618541" green="0.94590782663538731" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="9MV-7V-qTQ"/>
+                                    </mask>
+                                </variation>
+                            </label>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -407,7 +407,7 @@
                         </variation>
                     </view>
                     <connections>
-                        <outlet property="currencyPicker" destination="LyO-c6-rzR" id="SPm-am-sol"/>
+                        <outlet property="pickerView" destination="LyO-c6-rzR" id="o9T-pW-TSk"/>
                         <outlet property="resultDisplay" destination="DFY-7S-hg9" id="mZQ-sM-EJq"/>
                     </connections>
                 </viewController>
