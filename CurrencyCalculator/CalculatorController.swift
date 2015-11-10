@@ -8,23 +8,27 @@
 
 import Foundation
 
-
+public protocol DisplayDelegete{
+    func update(result:Double?)
+    func updateHistory(action:String)
+}
 
 class Calculator {
-    private var memory = Array<Double>()
-    private var opera = Brain()
-    private var period = false
     var displayDelegate:DisplayDelegete?
-    private var temp:String?{
+    private var memory = Array<Double>()
+    private var brain = Brain()
+    private var period = false
+    private var operation:String?
+    private var temp:String = "0"{
         didSet{
-            displayDelegate?.update(Double(temp!))
+            displayDelegate?.update(Double(temp)!)
         }
     }
     
     func addDigigt(digit:String){
         let dot = "."
-        if (opera.isTyping){
-            temp! += digit
+        if  brain.ready {
+            temp += digit
             if (digit == dot){
                 period = true
             }
@@ -34,27 +38,33 @@ class Calculator {
                 period = true
                 temp = "0"+digit
             }
-            opera.isTyping = true
+            brain.switchState()
+            displayDelegate?.updateHistory(operation ?? "")
         }
     }
     
     func updateOperation(operation: String){
-        opera.pushOperand(Double(temp!)!)
-        opera.performOperation(operation)
-        displayDelegate?.update(opera.result)
+        if brain.ready {
+            brain.pushOperand(Double(temp)!)
+            displayDelegate?.updateHistory(temp)
+        }
+        self.operation = operation
+        brain.performOperation(operation)
+        displayDelegate?.update(brain.result)
+      
     }
-
 
     func clear(){
         temp = "0"
-        opera = Brain()
+        brain = Brain()
     }
     
     func evaluate(){
-        if opera.isTyping {
-            opera.addDigit(Double(temp!)!)
+        if brain.ready {
+            brain.addDigit(Double(temp)!)
+            displayDelegate?.updateHistory(temp)
         }
-        if let result = opera.evaluate() {
+        if let result = brain.evaluate() {
             displayDelegate?.update(result)
         }
     }
