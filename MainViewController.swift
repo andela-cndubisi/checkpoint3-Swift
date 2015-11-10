@@ -10,13 +10,15 @@ import UIKit
 
 class MainViewController: UIViewController, DisplayDelegete{
     
-    
     @IBOutlet weak var pickerView: UIPickerView!
     @IBOutlet weak var resultDisplay: UILabel!
 
+    @IBOutlet weak var historyLabel: UILabel!
+    
     let list = Currencies()
     var calculator = Calculator()
     var currencyPicker:CurrencyPicker?
+    
     @IBAction func digitPressed(sender: UIButton) {
         calculator.addDigigt(sender.currentTitle!)
     }
@@ -31,6 +33,11 @@ class MainViewController: UIViewController, DisplayDelegete{
     
     @IBAction func clear(sender: UIButton) {
         calculator.clear()
+        historyLabel.text = ""
+    }
+    
+    func updateHistory(action:String){
+        historyLabel.text! += action + " "
     }
     
     func update(result: Double?) {
@@ -42,23 +49,6 @@ class MainViewController: UIViewController, DisplayDelegete{
                 resultDisplay.text = res
             }
         }
-    }
-    
-    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
-        return 1
-    }
-    
-    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return list.currencyList.count
-    }
-    
-    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return list.currencyList[row]
-    }
-    
-    func pickerView(pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
-        let string = list.currencyList[row]
-        return NSAttributedString(string:string, attributes: [NSForegroundColorAttributeName:UIColor.whiteColor(), NSFontAttributeName:UIFont(descriptor: UIFontDescriptor.preferredFontDescriptorWithTextStyle(UIFontTextStyleTitle2), size: 14)]);
     }
     
     override func viewDidLoad() {
