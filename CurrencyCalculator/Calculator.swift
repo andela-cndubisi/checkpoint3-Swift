@@ -6,14 +6,47 @@
 //  Copyright © 2015 andela-cj. All rights reserved.
 //
 
-public protocol DisplayDelegete{
-    func update(result:Double?)
+
+enum Op:Equatable{
+    case binaryOperation(String, (Double, Double)-> Double)
+    case operand(Double)
+}
+
+func ==(lhs: Op, rhs: Op) -> Bool {
+    
+    var mlhs:String?
+    var mrhs:String?
+    let isDouble = false
+    
+    switch lhs{
+    case .binaryOperation(let text, _):
+        mlhs = text
+        break
+        
+    case .operand(_):
+        return isDouble
+        
+    }
+    
+    switch rhs{
+    case .binaryOperation(let text, _):
+        mrhs = text
+        break
+        
+    case .operand(_):
+        return isDouble
+        
+    }
+    
+    return mlhs == mrhs
 }
 
 struct Brain {
-    var opStack = [Op]()
-    var isTyping:Bool = false
-    var knownOps = [String:Op]()
+    private var opStack = [Op]()
+    private var knownOps = [String:Op]()
+    private var isTyping:Bool = false
+
+    var ready:Bool {get{return isTyping}}
     var currentOperation:Op?{
         willSet{
             if (currentOperation != nil) {
@@ -23,9 +56,13 @@ struct Brain {
             }
         }
         didSet{
+            if (isOperation(opStack.last!) && opStack.last != currentOperation){
+                opStack.removeAtIndex(opStack.count-1)
+            }
             opStack.append(currentOperation!)
         }
     }
+    
     var result:Double?{
         didSet{
             opStack.removeAll()
@@ -33,11 +70,24 @@ struct Brain {
             
         }
     }
-
     
+    mutating func switchState(){
+        isTyping = !isTyping
+    }
+
     mutating func addDigit(digit:Double){
         opStack.append(.operand(digit))
         isTyping = false
+    }
+    
+    
+    private func isOperation(operation: Op) -> Bool{
+        switch operation{
+        case .binaryOperation(_, _):
+            return true
+        case .operand(_):
+            return false
+        }
     }
     
     init(){
@@ -69,11 +119,8 @@ struct Brain {
         return result
     }
 
-    enum Op{
-        case binaryOperation(String, (Double, Double)-> Double)
-        case operand(Double)
-    }
-    
+ 
+
     mutating func pushOperand(digit:Double){
         opStack.append(.operand(digit))
     }
@@ -84,4 +131,6 @@ struct Brain {
             isTyping = false
         }
     }
+
 }
+
