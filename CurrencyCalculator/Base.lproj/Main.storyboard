@@ -149,7 +149,7 @@
                                     <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <connections>
-                                    <action selector="digitPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="7MX-uI-mFz"/>
+                                    <action selector="periodPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="zT3-yt-K0Y"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ixf-Fy-snS">

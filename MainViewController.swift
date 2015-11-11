@@ -9,18 +9,13 @@
 import UIKit
 
 class MainViewController: UIViewController, DisplayDelegete{
-    
+    let calculator = Calculator()
     @IBOutlet weak var pickerView: UIPickerView!
     @IBOutlet weak var resultDisplay: UILabel!
-
     @IBOutlet weak var historyLabel: UILabel!
     
-    let list = Currencies()
-    var calculator = Calculator()
-    var currencyPicker:CurrencyPicker?
-    
     @IBAction func digitPressed(sender: UIButton) {
-        calculator.addDigigt(sender.currentTitle!)
+        calculator.addDigit(sender.currentTitle!)
     }
     
     @IBAction func enterPressed(sender: UIButton) {
@@ -31,6 +26,9 @@ class MainViewController: UIViewController, DisplayDelegete{
         calculator.updateOperation(sender.currentTitle!)
     }
     
+    @IBAction func periodPressed(sender: UIButton) {
+        calculator.addPeriod()
+    }
     @IBAction func clear(sender: UIButton) {
         calculator.clear()
         historyLabel.text = ""
@@ -40,19 +38,24 @@ class MainViewController: UIViewController, DisplayDelegete{
         historyLabel.text! += action + " "
     }
     
-    func update(result: Double?) {
+    func update(result: String?) {
         if let re = result {
+            if re.hasSuffix("."){
+                resultDisplay.text = re
+                return
+            }
             let formatter = NSNumberFormatter()
             formatter.numberStyle = NSNumberFormatterStyle.DecimalStyle
             formatter.maximumFractionDigits = 6
-            if let res = formatter.stringForObjectValue(re){
-                resultDisplay.text = res
+            if let res = formatter.numberFromString(re){
+                resultDisplay.text = res.stringValue
             }
         }
     }
     
     override func viewDidLoad() {
         calculator.displayDelegate = self
-        currencyPicker =  CurrencyPicker(pickerView)
+        pickerView.dataSource = calculator.inner
+        pickerView.delegate = calculator.inner
     }
 }

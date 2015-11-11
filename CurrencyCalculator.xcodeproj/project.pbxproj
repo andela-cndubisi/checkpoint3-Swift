@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2F2339001BF0DACB00F3DE9E /* CurrencyController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F2338FF1BF0DACB00F3DE9E /* CurrencyController.swift */; };
+		2F2339021BF238F100F3DE9E /* Currencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F2339011BF238F100F3DE9E /* Currencies.swift */; };
 		2FD143CC1BEBB371007D0782 /* CurrencyCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12BAD501BE8BAE600D50E8D /* CurrencyCalculatorTests.swift */; };
 		2FD143CE1BEBB3AF007D0782 /* Calculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FD143CD1BEBB3AF007D0782 /* Calculator.swift */; };
 		C12BAD3C1BE8BAE600D50E8D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12BAD3B1BE8BAE600D50E8D /* AppDelegate.swift */; };
@@ -37,7 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		2F2338FF1BF0DACB00F3DE9E /* CurrencyController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyController.swift; sourceTree = "<group>"; };
+		2F2339011BF238F100F3DE9E /* Currencies.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Currencies.swift; sourceTree = "<group>"; };
 		2FD143CD1BEBB3AF007D0782 /* Calculator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Calculator.swift; sourceTree = "<group>"; };
 		C12BAD381BE8BAE600D50E8D /* CurrencyCalculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CurrencyCalculator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C12BAD3B1BE8BAE600D50E8D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -111,7 +111,7 @@
 				C12BAD421BE8BAE600D50E8D /* Assets.xcassets */,
 				C12BAD441BE8BAE600D50E8D /* LaunchScreen.storyboard */,
 				C12BAD471BE8BAE600D50E8D /* Info.plist */,
-				2F2338FF1BF0DACB00F3DE9E /* CurrencyController.swift */,
+				2F2339011BF238F100F3DE9E /* Currencies.swift */,
 			);
 			path = CurrencyCalculator;
 			sourceTree = "<group>";
@@ -266,9 +266,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F2339021BF238F100F3DE9E /* Currencies.swift in Sources */,
 				C12BAD3C1BE8BAE600D50E8D /* AppDelegate.swift in Sources */,
 				2FD143CE1BEBB3AF007D0782 /* Calculator.swift in Sources */,
-				2F2339001BF0DACB00F3DE9E /* CurrencyController.swift in Sources */,
 				C12BAD6C1BE8BBDD00D50E8D /* MainViewController.swift in Sources */,
 				C12BAD701BE8CD1C00D50E8D /* CalculatorController.swift in Sources */,
 			);
