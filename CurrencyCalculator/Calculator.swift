@@ -6,6 +6,7 @@
 //  Copyright © 2015 andela-cj. All rights reserved.
 //
 
+import Darwin
 
 enum Op:Equatable{
     case binaryOperation(String, (Double, Double)-> Double)
@@ -40,35 +41,19 @@ func ==(lhs: Op, rhs: Op) -> Bool {
     return mlhs == mrhs
 }
 
-extension Brain: CurrencyConverter, Operations {
-    
-    var baseCurrency:String { get{return Currencies.baseCurrency}}
-    var tempCurrency:String { get{return Currencies.tempCurrency} }
+extension Brain:Operations {
     
     mutating func pushOperand(digit:Double){
-        opStack.append(Op.operand(convert(digit)))
+        opStack.append(Op.operand(Currencies().convert(digit)))
     }
     
     mutating func performOperation(symbol:String){
-        if let operation = knownOps[symbol]{
-            currentOperation = operation
-            isTyping = false
+        if !self {
+            if let operation = knownOps[symbol]{
+                currentOperation = operation
+                isTyping = false
+            }
         }
-    }
-    
-    func convertToBase(value:Double) -> Double {
-        return value * Currencies.currencyList[baseCurrency]!;
-    }
-    
-    func convert(value:Double) -> Double {
-        if baseCurrency != tempCurrency {
-            print("base currency \(baseCurrency) tempCurrency \(tempCurrency)" )
-            
-            let currentInBase:Double = convertToBase(value);
-            let rate:Double  = Currencies.currencyList[tempCurrency]!
-            return currentInBase / rate;
-        }
-        return value;
     }
 }
 
@@ -78,11 +63,13 @@ protocol Operations{
 }
 
 
-struct Brain{
-    var opStack = [Op]()
+struct Brain: BooleanType{
     private var knownOps = [String:Op]()
     private var isTyping:Bool = false
-    var ready:Bool {get{return isTyping}}
+    var boolValue:Bool { get{return opStack.isEmpty } }
+    var opStack = [Op]()
+    var last:Double?{ get{ return result } }
+    var ready:Bool { get{ return isTyping} }
     var currentOperation:Op?{
         willSet{
             if (currentOperation != nil) {
@@ -99,11 +86,15 @@ struct Brain{
         }
     }
     
-    var result:Double?{
+    private var result:Double?{
         didSet{
             opStack.removeAll()
             opStack.append(.operand(result!))
         }
+    }
+    
+    mutating func update(value:Double){
+        result = value
     }
     
     init(){
