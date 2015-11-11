@@ -16,9 +16,9 @@ protocol DisplayDelegete{
 class Calculator {
     var displayDelegate:DisplayDelegete?
     var brain = Brain()
+    var inner = CurrencyPicker()
     private var period = false
     private var operation:String?
-    var inner = CurrencyPicker()
     private var temp:String = "0"{
         didSet{
             displayDelegate?.update(temp)
@@ -27,6 +27,31 @@ class Calculator {
     
     init(){
         inner.parent = self
+    }
+    
+    func negate(){
+        if brain.ready {
+            temp = negate(temp)
+        }
+        if !brain {
+            temp = negate("\(brain.last!)")
+            brain.update(Double(temp)!)
+        }
+    }
+    
+    private func negate(string:String)->String{
+        if string.containsString("-"){
+            return string.stringByReplacingOccurrencesOfString("-", withString: "")
+        }else {
+            return "-" + string
+        }
+    }
+    
+    func percentage() {
+        if brain.ready {
+            let percet = NSNumberFormatter().numberFromString(temp)!.doubleValue / 100
+            temp = "\(percet)"
+        }
     }
     
     func addDigit(digit:String){
@@ -38,6 +63,11 @@ class Calculator {
             operation = nil
             temp = digit
         }
+    }
+    
+    func updateDisplay(value:Double){
+        brain.update(value)
+        temp = "\(value)"
     }
     
     func addPeriod(){
@@ -56,8 +86,8 @@ class Calculator {
         }
         self.operation = operation
         brain.performOperation(operation)
-        if let re = brain.result {
-            displayDelegate?.update("\(re)")
+        if let last = brain.last {
+            displayDelegate?.update("\(last)")
             inner.update()
         }
     }
@@ -86,8 +116,14 @@ class Calculator {
     
     class CurrencyPicker: NSObject,UIPickerViewDataSource, UIPickerViewDelegate{
         weak var parent:Calculator!
-        let array = Array(Currencies.currencyList.keys)
-        let currencies = Currencies()
+        var currencies = Currencies()
+        let array:[String]
+        
+        override init() {
+            array = Array(currencies.currencyList)
+            super.init()
+        }
+
         var picker:UIPickerView!
         func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
             picker = pickerView
@@ -100,31 +136,29 @@ class Calculator {
         }
         
         func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-            return Currencies.currencyList.count
+            return currencies.currencyList.count
         }
         
         func update(){
             currencies.swap()
             picker.selectRow(array.indexOf(Currencies.baseCurrency)!, inComponent: 0, animated: true)
-            print(" after swap base currency \(Currencies.baseCurrency) tempCurrency \(Currencies.tempCurrency)" )
-
         }
         
         func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
             let title = array[row]
-            Currencies.tempCurrency = title
+            currencies.tempCurrency = title
 
             if !parent.brain.ready && parent.operation == nil{
-                if let _ = parent.brain.result{
-                    parent.brain.result = parent.brain.convert(parent.brain.result!)
-                    parent.displayDelegate?.update("\(parent.brain.result!)")
-                    Currencies.baseCurrency = title
+                if !parent.brain {
+                    parent.updateDisplay(currencies.convert(Double(parent.temp)!))
+                    currencies.baseCurrency = title
                 }
+                currencies.baseCurrency = title
             }
         }
     
         func pickerView(pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
-            let title = Array(Currencies.currencyList.keys)[row]
+            let title = array[row]
             return NSAttributedString(string:title, attributes: [NSForegroundColorAttributeName:UIColor.whiteColor(), NSFontAttributeName:UIFont(descriptor: UIFontDescriptor.preferredFontDescriptorWithTextStyle(UIFontTextStyleTitle2), size: 14)]);
         }
     }
