@@ -8,10 +8,14 @@
 
 import Foundation
 
-struct Currencies{
+struct Currencies: CurrencyConverter {
     static var baseCurrency:String = "USD"
     static var tempCurrency:String = "USD"
-    static var currencyList = ["USD":1.0
+    var baseCurrency:String { get{ return Currencies.baseCurrency } set { Currencies.baseCurrency = newValue } }
+    var tempCurrency:String { get{ return Currencies.tempCurrency } set { Currencies.tempCurrency = newValue } }
+    let currencyList = Array(Currencies.currencyAndRates.keys)
+    
+    static var currencyAndRates = ["USD":1.0
         ,"KWD":0.3021
         ,"BHD":0.3772
         ,"OMR":0.3851
@@ -33,14 +37,26 @@ struct Currencies{
         Currencies.tempCurrency = Currencies.baseCurrency
         Currencies.baseCurrency = temp
     }
+    
+    func convertToBase(value:Double) -> Double {
+        return value * Currencies.currencyAndRates[baseCurrency]!;
+    }
+    
+    func convert(value:Double) -> Double {
+        if baseCurrency != tempCurrency {
+            let currentInBase:Double = convertToBase(value);
+            let rate:Double  = Currencies.currencyAndRates[tempCurrency]!
+            return currentInBase / rate;
+        }
+        return value;
+    }
 
 }
 
-
-
 protocol CurrencyConverter{
-    var baseCurrency:String { get }
-    var tempCurrency:String { get }
+    static var currencyAndRates:[String:Double]{get}
+    var baseCurrency:String { get set }
+    var tempCurrency:String { get set }
     func convertToBase(value:Double) -> Double
     func convert(value:Double) -> Double
 }
