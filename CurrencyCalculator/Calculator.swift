@@ -35,17 +35,53 @@ func ==(lhs: Op, rhs: Op) -> Bool {
         
     case .operand(_):
         return isDouble
-        
     }
     
     return mlhs == mrhs
 }
 
-struct Brain {
-    private var opStack = [Op]()
+extension Brain: CurrencyConverter, Operations {
+    
+    var baseCurrency:String { get{return Currencies.baseCurrency}}
+    var tempCurrency:String { get{return Currencies.tempCurrency} }
+    
+    mutating func pushOperand(digit:Double){
+        opStack.append(Op.operand(convert(digit)))
+    }
+    
+    mutating func performOperation(symbol:String){
+        if let operation = knownOps[symbol]{
+            currentOperation = operation
+            isTyping = false
+        }
+    }
+    
+    func convertToBase(value:Double) -> Double {
+        return value * Currencies.currencyList[baseCurrency]!;
+    }
+    
+    func convert(value:Double) -> Double {
+        if baseCurrency != tempCurrency {
+            print("base currency \(baseCurrency) tempCurrency \(tempCurrency)" )
+            
+            let currentInBase:Double = convertToBase(value);
+            let rate:Double  = Currencies.currencyList[tempCurrency]!
+            return currentInBase / rate;
+        }
+        return value;
+    }
+}
+
+protocol Operations{
+    mutating func pushOperand(digit:Double)
+    mutating func performOperation(symbol:String)
+}
+
+
+struct Brain{
+    var opStack = [Op]()
     private var knownOps = [String:Op]()
     private var isTyping:Bool = false
-
     var ready:Bool {get{return isTyping}}
     var currentOperation:Op?{
         willSet{
@@ -67,26 +103,6 @@ struct Brain {
         didSet{
             opStack.removeAll()
             opStack.append(.operand(result!))
-            
-        }
-    }
-    
-    mutating func switchState(){
-        isTyping = !isTyping
-    }
-
-    mutating func addDigit(digit:Double){
-        opStack.append(.operand(digit))
-        isTyping = false
-    }
-    
-    
-    private func isOperation(operation: Op) -> Bool{
-        switch operation{
-        case .binaryOperation(_, _):
-            return true
-        case .operand(_):
-            return false
         }
     }
     
@@ -95,6 +111,15 @@ struct Brain {
         knownOps["+"] = Op.binaryOperation("+",+)
         knownOps["÷"] = Op.binaryOperation("÷",{$1/$0})
         knownOps["−"] = Op.binaryOperation("−",{$1-$0})
+    }
+
+    private func isOperation(operation: Op) -> Bool{
+        switch operation{
+        case .binaryOperation(_, _):
+            return true
+        case .operand(_):
+            return false
+        }
     }
 
     func evaluate (ops:[Op], _ firstOperand:Double?)-> (result: Double?, remainingOps:[Op]){
@@ -114,23 +139,14 @@ struct Brain {
         return (nil, ops)
     }
     
-    func evaluate()->Double?{
+    mutating func evaluate()->Double?{
         let (result, _) = evaluate(opStack, nil)
+        self.result = result
         return result
     }
 
- 
-
-    mutating func pushOperand(digit:Double){
-        opStack.append(.operand(digit))
+    mutating func switchState(){
+        isTyping = !isTyping
     }
-    
-    mutating func performOperation(symbol:String){
-        if let operation = knownOps[symbol]{
-            currentOperation = operation
-            isTyping = false
-        }
-    }
-
 }
 
