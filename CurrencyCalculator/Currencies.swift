@@ -32,10 +32,10 @@ struct Currencies: CurrencyConverter {
         Currencies.tempCurrency = "USD"
     }
     
-    func swap(){
-        let temp = Currencies.tempCurrency
-        Currencies.tempCurrency = Currencies.baseCurrency
-        Currencies.baseCurrency = temp
+    mutating func swap(){
+        let temp = tempCurrency
+        tempCurrency = baseCurrency
+        baseCurrency = temp
     }
     
     func convertToBase(value:Double) -> Double {
