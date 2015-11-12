@@ -16,7 +16,7 @@ protocol DisplayDelegete{
 class Calculator {
     var displayDelegate:DisplayDelegete?
     var brain = Brain()
-    var inner = CurrencyPicker()
+    var picker = CurrencyPicker()
     private var period = false
     private var operation:String?
     private var temp:String = "0"{
@@ -26,7 +26,7 @@ class Calculator {
     }
     
     init(){
-        inner.parent = self
+        picker.parent = self
     }
     
     func negate(){
@@ -72,31 +72,21 @@ class Calculator {
     
     func addPeriod(){
         let dot = "."
-        if !period {
-            temp += dot
-        }
-        period = true
-        !brain.ready ? brain.switchState(): print("")
+        if !period { temp += dot }
+         period = true
+        if brain.ready { brain.switchState() }
     }
     
     func updateOperation(operation: String){
-        if brain.ready {
-            brain.pushOperand(Double(temp)!)
-            displayDelegate?.updateHistory(temp.hasSuffix(".") ? temp+"0" : temp)
-        }
         self.operation = operation
-        brain.performOperation(operation)
-        if let last = brain.last {
-            displayDelegate?.update("\(last)")
-            inner.update()
-        }
+        evaluate()
     }
 
     func clear(){
         temp = "0"
         operation = nil
         period = false
-        inner.reset()
+        picker.reset()
         brain = Brain()
     }
     
@@ -109,9 +99,14 @@ class Calculator {
             if let result = brain.evaluate() {
                 brain.switchState()
                 displayDelegate?.update("\(result)")
-                inner.update()
+            }
+        } else {
+            brain.performOperation(operation!)
+            if let last = brain.last {
+                displayDelegate?.update("\(last)")
             }
         }
+        picker.update()
     }
     
     class CurrencyPicker: NSObject,UIPickerViewDataSource, UIPickerViewDelegate{
@@ -140,18 +135,18 @@ class Calculator {
         }
         
         func update(){
-            currencies.swap()
-            picker.selectRow(array.indexOf(Currencies.baseCurrency)!, inComponent: 0, animated: true)
+            picker.selectRow(array.indexOf(currencies.baseCurrency)!, inComponent: 0, animated: true)
+            currencies.tempCurrency = currencies.baseCurrency
         }
         
         func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
             let title = array[row]
             currencies.tempCurrency = title
-
+            
             if !parent.brain.ready && parent.operation == nil{
                 if !parent.brain {
-                    parent.updateDisplay(currencies.convert(Double(parent.temp)!))
-                    currencies.baseCurrency = title
+                    currencies.swap()
+                    parent.updateDisplay(currencies.convert(parent.brain.last!))
                 }
                 currencies.baseCurrency = title
             }
