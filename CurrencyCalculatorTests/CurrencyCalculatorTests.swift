@@ -13,22 +13,22 @@ class CurrencyCalculatorTests: XCTestCase {
     var brain = Brain()
     
     func testAddition() {
-        brain.addDigit(5)
-        XCTAssertFalse(brain.isTyping)
+        brain.pushOperand(5)
+        XCTAssertFalse(brain.ready)
         brain.performOperation(operation.add)
-        brain.addDigit(8)
-        XCTAssertEqual(13, brain.result)
+        brain.pushOperand(8)
+        XCTAssertEqual(13, brain.evaluate())
     }
     
     func testContinuousCalculation(){
-        brain.addDigit(8)
+        brain.pushOperand(8)
         brain.performOperation(operation.add)
-        brain.addDigit(4)
+        brain.pushOperand(4)
         brain.performOperation(operation.minus)
-        XCTAssertEqual(12, brain.result)
-        brain.addDigit(2)
+        XCTAssertEqual(12, brain.last)
+        brain.pushOperand(2)
         brain.performOperation(operation.times)
-        XCTAssertEqual(10, brain.result)
+        XCTAssertEqual(10, brain.last)
     }
     
     func testRecursiveCalculation(){
@@ -36,7 +36,7 @@ class CurrencyCalculatorTests: XCTestCase {
         brain.performOperation("+")
         brain.pushOperand(8)
         brain.performOperation("×")
-        XCTAssertEqual(13, brain.result)
+        XCTAssertEqual(13, brain.last)
         brain.pushOperand(2)
         XCTAssertEqual(26, brain.evaluate())
     }
@@ -46,7 +46,13 @@ class CurrencyCalculatorTests: XCTestCase {
         brain.pushOperand(5)
         brain.performOperation("×")
         brain.pushOperand(8)
-        XCTAssertEqual(nil, brain.evaluate())
+        XCTAssertEqual(40, brain.evaluate())
+    }
+    
+    func testOpEquality(){
+        XCTAssertFalse(Op.operand(4) == Op.operand(6))
+        XCTAssertTrue(Op.binaryOperation(operation.div, /) == Op.binaryOperation(operation.div, /))
+        XCTAssertTrue(Op.binaryOperation(operation.minus, -) == Op.binaryOperation(operation.minus, -))
     }
     
     struct operation {

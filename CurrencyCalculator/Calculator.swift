@@ -17,34 +17,37 @@ func ==(lhs: Op, rhs: Op) -> Bool {
     
     var mlhs:String?
     var mrhs:String?
-    let isDouble = false
+    var dlhs: Double?
+    var drhs:Double?
     
     switch lhs{
     case .binaryOperation(let text, _):
         mlhs = text
         break
         
-    case .operand(_):
-        return isDouble
-        
+    case .operand(let dl):
+        dlhs = dl
+        break
     }
     
     switch rhs{
     case .binaryOperation(let text, _):
+        if (mlhs == nil){ return false }
         mrhs = text
         break
         
-    case .operand(_):
-        return isDouble
+    case .operand(let dr):
+        if (dlhs == nil){ return false }
+        drhs = dr
     }
     
-    return mlhs == mrhs
+    return  (mrhs != nil) ? mlhs == mrhs : drhs == dlhs
 }
 
 extension Brain:Operations {
     
     mutating func pushOperand(digit:Double){
-        opStack.append(Op.operand(Currencies().convert(digit)))
+        opStack.append(.operand(Currencies().convert(digit)))
     }
     
     mutating func performOperation(symbol:String){

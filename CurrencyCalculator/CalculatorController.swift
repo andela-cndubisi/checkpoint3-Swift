@@ -13,20 +13,25 @@ protocol DisplayDelegete{
     func updateHistory(action:String)
 }
 
+extension Double {
+    public var description: String {get{return
+        "\(Currencies.tempCurrency) \(self)" }}
+}
+
 class Calculator {
     var displayDelegate:DisplayDelegete?
     var brain = Brain()
-    var picker = CurrencyPicker()
+    lazy var picker:CurrencyPicker =  {
+        let picker = CurrencyPicker()
+        picker.parent = self
+        return picker }()
+    
     private var period = false
     private var operation:String?
     private var temp:String = "0"{
         didSet{
             displayDelegate?.update(temp)
         }
-    }
-    
-    init(){
-        picker.parent = self
     }
     
     func negate(){
@@ -47,9 +52,22 @@ class Calculator {
         }
     }
     
+    func delete(){
+        if brain.ready{
+            if temp.characters.count != 1 {
+             temp = String(temp.characters.dropLast())
+            } else{
+                temp = "0"
+            }
+        }
+    }
+    
     func percentage() {
         if brain.ready {
-            let percet = NSNumberFormatter().numberFromString(temp)!.doubleValue / 100
+            let formatter = NSNumberFormatter()
+            formatter.numberStyle = NSNumberFormatterStyle.DecimalStyle
+            formatter.maximumFractionDigits = 6
+            let percet = formatter.numberFromString(temp)!.doubleValue / 100
             temp = "\(percet)"
         }
     }
@@ -93,7 +111,7 @@ class Calculator {
     func evaluate(){
         if brain.ready {
             brain.pushOperand(Double(temp)!)
-            displayDelegate?.updateHistory(temp.hasSuffix(".") ? temp+"0" : temp)
+            displayDelegate?.updateHistory(temp.hasSuffix(".") ? "\(Double(temp+"0")!.description)" : "\(Double(temp)!.description)")
         }
         if operation == nil {
             if let result = brain.evaluate() {

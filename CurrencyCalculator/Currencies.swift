@@ -51,6 +51,8 @@ struct Currencies: CurrencyConverter {
         return value;
     }
 
+    
+
 }
 
 protocol CurrencyConverter{

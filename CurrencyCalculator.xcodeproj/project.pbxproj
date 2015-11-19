@@ -203,6 +203,11 @@
 					C12BAD371BE8BAE600D50E8D = {
 						CreatedOnToolsVersion = 7.1;
 						DevelopmentTeam = M9399PEWF4;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 					C12BAD4B1BE8BAE600D50E8D = {
 						CreatedOnToolsVersion = 7.1;
